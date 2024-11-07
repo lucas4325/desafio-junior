@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { v4 } from 'uuid'
 
 
-const listaM:any = [
+const listaM = [
   {
     tarefa: 'teste', 
     prioridade: {
@@ -19,6 +19,7 @@ const listaM:any = [
   }
 ]
 
+
 export default function Home() {
   const [ lista, setLista ] = useState(listaM)
   const [ isModalOpen, setIsModalOpen ] = useState(false);
@@ -26,8 +27,8 @@ export default function Home() {
   const [ prioridade, setPrioridade ] = useState({})
 
   const addTarefa = (c = false)=>{
-    setLista((values:any) =>{
-      return([
+    setLista((values: any) =>{
+      return [
         ...values,
         {
           tarefa: tarefa,
@@ -35,7 +36,7 @@ export default function Home() {
           concluida: c,
           id: v4()
         }
-      ])
+      ]
     })
   }
 

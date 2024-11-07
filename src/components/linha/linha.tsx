@@ -68,7 +68,7 @@ const Linha = ({tarefa, concluido, prioridade, concluida, ID, remover, editarTar
 				<option value="urgente">Urgente</option>
 			</select>
 
-			<input className={styles.checkbox} type="checkbox" checked={c} name="concluido" onClick={marcado} />
+			<input className={styles.checkbox} type="checkbox" checked={c} name="concluido" onChange={marcado} />
 
 			<button className={styles.excluir} onClick={remove}>X</button>
 
