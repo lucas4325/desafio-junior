@@ -128,6 +128,7 @@ export default function Home() {
             <span>Tarefa</span>
             <span>Prioridade</span>
             <span>Concluido</span>
+            <span>Excluir</span>
           </div>
 
           <div className={styles.conteudoTabela} >

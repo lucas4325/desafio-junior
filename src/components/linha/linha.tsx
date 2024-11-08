@@ -17,8 +17,8 @@ const Linha = ({tarefa, concluido, prioridade, concluida, ID, remover, editarTar
 	const [ c, setC ] = useState(concluida)
 	const [ editar, setEditar ] = useState<boolean>(true)
 	const [ input, setInput ] = useState(tarefa)
-
-
+	const [ estiloConcluido, setEstiloConcluido ] = useState('')
+	
 	const marcado = (event:any)=>{
 		setC(event.target.checked)
 		concluido({id: ID, marcado: event.target.checked})
@@ -57,20 +57,34 @@ const Linha = ({tarefa, concluido, prioridade, concluida, ID, remover, editarTar
 	useEffect(()=>{
 		setInput(tarefa)
 	}, [tarefa])
+
 	return(
-		<div className={styles.linha} >
-			<input onBlur={desabilitarEdicao} onKeyDown={enter} onChange={editaInput} placeholder='Escreva a Tarefa' disabled={editar} value={input} className={styles.linhaInputs} type="text" name='titulo' />
-			
-			<select className={styles.linhaSelect} disabled={true} value={prioridade} name="prioridade" >
-				<option value="baixa">Baixa</option>
-				<option value="media">Média</option>
-				<option value="alta">Alta</option>
-				<option value="urgente">Urgente</option>
-			</select>
+		<div className={`${styles.linha} ${concluida === true ? styles.concluido : '' }`} >
+			<div className={styles.linhaMob}>
+				<label htmlFor="">Tarefa:</label>
+				<input onBlur={desabilitarEdicao} onKeyDown={enter} onChange={editaInput} placeholder='Escreva a Tarefa' disabled={editar} value={input} className={styles.linhaInputs} type="text" name='titulo' />
+			</div>
 
-			<input className={styles.checkbox} type="checkbox" checked={c} name="concluido" onChange={marcado} />
+			<div className={styles.linhaMob}>
+				<label htmlFor="">Prioridade:</label>
 
-			<button className={styles.excluir} onClick={remove}>X</button>
+				<select className={styles.linhaSelect} disabled={true} value={prioridade} name="prioridade" >
+					<option value="baixa">Baixa</option>
+					<option value="media">Média</option>
+					<option value="alta">Alta</option>
+					<option value="urgente">Urgente</option>
+				</select>
+			</div>
+
+			<div className={styles.linhaMobC}>
+				<label htmlFor="">Concluida:</label>
+				<input className={styles.checkbox} type="checkbox" checked={c} name="concluido" onChange={marcado} />
+			</div>
+
+			<div className={styles.linhaMobE}>
+				<label htmlFor="">Excluir:</label>
+				<button className={styles.excluir} onClick={remove}>X</button>
+			</div>
 
 			<button className={styles.editar} onClick={editarOpen}><img src="editar.png" alt="" /></button>
 		</div>

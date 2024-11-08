@@ -2,18 +2,13 @@
   display: flex;
   justify-content: space-between;
 	padding: 10px 10px;
-	border-bottom: 2px solid black;
+	border: 5px solid rgb(197, 197, 1);
 	position: relative;
 }
 
-.linha:last-child {
-	border-bottom: none;
-}
-
 .linhaInputs {
-	width: 35%;
+	width: 300px;
 	padding: 5px;
-	/* text-align: center; */
 }
 
 .linhaSelect {
@@ -22,7 +17,8 @@
 }
 
 .checkbox {
-	width: 25px;
+	width: 30px;
+	height: 30px;
 }
 
 .excluir {
@@ -38,10 +34,71 @@
 	cursor: pointer;
 	margin: auto 0;
 	position: absolute;
-	right: -40px;
+	right: -50px;
 }
 
 .editar img {
 	width: 100%;
 	height: 100%;
+}
+
+.concluido {
+	border: 5px solid rgb(45, 228, 45);
+}
+
+.linhaMob label, .linhaMobC label, .linhaMobE label {
+	display: none;
+}
+
+.linhaMobC, .linhaMobE {
+
+}
+
+@media (max-width: 767px) {
+	.editar {
+		right: -45px;
+	}
+}
+
+@media (max-width: 630px) {
+	.linhaInputs {
+		width: 200px;
+	}
+}
+
+@media (max-width: 480px) {
+	.editar {
+		right: 10px;
+		top: 5px;
+	}
+
+	.linhaMob label, .linhaMobC label, .linhaMobE label {
+		display: flex;
+		font-size: 18px;
+		margin-bottom: 5px;
+	}
+
+	.linhaMobC , .linhaMobE {
+		display: flex;
+		gap: 30px;
+		align-items: center;
+	}
+
+	.linha {
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.linhaInputs, .linhaSelect {
+		width: 100%;
+	}
+	
+	.checkbox {
+		width: 30px;
+		height: 30px;
+	}
+
+	.excluir {
+		width: 30px;
+	}
 }
