@@ -3,11 +3,11 @@
 import Linha from "@/components/linha/linha";
 import Modal from "@/components/modal/modal";
 import styles from "./page.module.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { v4 } from 'uuid'
 
 
-const listaM = [
+const listaM:any = [
   {
     tarefa: 'teste', 
     prioridade: {
@@ -25,8 +25,10 @@ export default function Home() {
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ tarefa, setTarefa ] = useState('')
   const [ prioridade, setPrioridade ] = useState({})
+  const [ filtro, setFiltro ] = useState(listaM)
+  // const [ filtroP, setFiltroP ] = useState(listaM)
 
-  const addTarefa = (c = false)=>{
+  const addTarefa = (c = false)=>{    
     setLista((values: any) =>{
       return [
         ...values,
@@ -72,8 +74,10 @@ export default function Home() {
     setIsModalOpen(false);
   };
 
-  const filtro = ()=>{
-    let l = lista.sort((a:any, b:any) => b.prioridade.id - a.prioridade.id);
+  const filtroF = (e:any)=>{
+    let LISTA = e
+    let l = LISTA.sort((a:any, b:any) => b.prioridade.id - a.prioridade.id);
+    setFiltro([...l])
   }
 
   const setaPrioridade = (e:any) => {
@@ -94,12 +98,37 @@ export default function Home() {
     setLista([...copiaLista])
   }
 
+  // const filtroConcluidas = ()=>{
+
+  // }
+
+  // const filtroPrioridade = (event?:any)=>{
+  //   let valor = event ? event.target.value : 'todas'
+  //   let listaT = filtro
+
+  //   if (valor === 'todas') {
+  //     setFiltroP([...listaT])
+  //   } else {
+  //     let filtrado = listaT.filter((e:any) => e.prioridade.valor === valor);
+  //     setFiltroP([...filtrado])
+  //   }
+  // }
+
+  // useEffect(()=>{
+  //   console.log(filtro);
+  //   filtroPrioridade()
+  // }, [filtro])
+
   useEffect(()=>{
     setPrioridade('')
     setTarefa('')
+    console.log(lista);
     
-    filtro()
+    // filtroF()
+    filtroF(lista)
+
   }, [lista])
+
   return (
     <div className={styles.home}>
       <div className={styles.containerTitulo}>
@@ -108,6 +137,30 @@ export default function Home() {
 
       <div className={styles.containerTarefas}>
         <div className={styles.adicionar} >
+          {/* <div className={styles.filtros}>
+            <div className={styles.filtoConcluido}>
+              <label htmlFor="">Status</label>
+
+              <select onChange={filtroConcluidas}>
+                <option value="todas">Todas</option>
+                <option value="concluidas">Conluidas</option>
+                <option value="naoConcluidas">Não Concluidas</option>
+              </select>
+            </div>
+
+            <div className={styles.filtoPrioridade}>
+              <label htmlFor="">Prioridade</label>
+
+              <select onChange={filtroPrioridade}>
+                <option value="todas">Todas</option>
+                <option value="baixa">Baixa</option>
+                <option value="media">Média</option>
+                <option value="alta">Alta</option>
+                <option value="urgente">Urgente</option>
+              </select>
+            </div>
+          </div> */}
+
           <button onClick={openModal}>Adiciona Tarefa</button>
 
           <Modal isOpen={isModalOpen} onClose={closeModal}>
@@ -133,8 +186,8 @@ export default function Home() {
 
           <div className={styles.conteudoTabela} >
             {
-              lista && lista.length >= 0 ? 
-              lista.map((e:any, i:number)=>{
+              filtro && lista.length >= 0 ? 
+              filtro.map((e:any, i:number)=>{
                 return(
                   <Linha key={i} editarTarefa={editarTarefa} remover={(id:string)=>{removeTarefa(id)}} concluido={handleConcluido} concluida={e.concluida} tarefa={e.tarefa} prioridade={e.prioridade.valor} ID={e.id} />
                 )
