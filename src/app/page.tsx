@@ -3,8 +3,12 @@
 import Linha from "@/components/linha/linha";
 import Modal from "@/components/modal/modal";
 import styles from "./page.module.css";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 } from 'uuid'
+import { auth, googleProvider, db } from '../firebase'
+import { signInWithPopup } from 'firebase/auth';
+import { collection, addDoc, getDocs, setDoc, getDoc, doc } from "firebase/firestore"; 
+// import "firebase/firestore";
 
 
 const listaM:any = [
@@ -19,13 +23,15 @@ const listaM:any = [
   }
 ]
 
-
 export default function Home() {
   const [ lista, setLista ] = useState(listaM)
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ tarefa, setTarefa ] = useState('')
   const [ prioridade, setPrioridade ] = useState({})
   const [ filtro, setFiltro ] = useState(listaM)
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [ docId, setDocId ] = useState<string>()
   // const [ filtroP, setFiltroP ] = useState(listaM)
 
   const addTarefa = (c = false)=>{    
@@ -129,10 +135,82 @@ export default function Home() {
 
   }, [lista])
 
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    try {
+      
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      setUser({
+        name: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+      });
+      setLoading(false);
+    } catch (error) {
+      console.error("Erro ao autenticar com o Google: ", error);
+      setLoading(false);
+    }
+  };
+  
+  const handleLogout = () => {
+    auth.signOut().then(() => {
+      setUser(null);
+    });
+  };
+
+  const criaDocumento = async() => {
+    try {
+      const docRef = await addDoc(collection(db, "users"), {
+        usuario: user.name,
+        email: user.email,
+        tarefas: filtro
+      });
+
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  }
+
+  const getBanco = async()=>{
+    const docRef = doc(db, 'users', ' tSytY9KgLhezyrnbuJpL');
+    const docSnap = await getDoc(docRef);
+  
+
+    // const querySnapshot = await getDocs(collection(db, "users"));
+    // querySnapshot.forEach((doc) => {
+    //   console.log('do banco',doc.data());
+    //   setDocId(doc.id)
+    // });
+  }
+
+  const handleDocumento = ()=>{
+
+  }
+
+  useEffect(()=>{
+    auth.onAuthStateChanged((val)=>{
+      if (!val) {
+        handleGoogleLogin();
+      }
+    })
+
+    getBanco()
+  }, [])
+
+
+  useEffect(()=>{
+    console.log(docId);
+  }, [docId])
   return (
     <div className={styles.home}>
       <div className={styles.containerTitulo}>
         <h1>Painel de Tarefas</h1>
+        <button onClick={handleLogout}>deslogar</button>
+        <button onClick={criaDocumento}>enviar pro banco</button>
+
       </div>
 
       <div className={styles.containerTarefas}>
@@ -157,12 +235,13 @@ export default function Home() {
                 <option value="media">Média</option>
                 <option value="alta">Alta</option>
                 <option value="urgente">Urgente</option>
-              </select>
-            </div>
-          </div> */}
+                </select>
+                </div>
+                </div> */}
 
           <button onClick={openModal}>Adiciona Tarefa</button>
 
+          
           <Modal isOpen={isModalOpen} onClose={closeModal}>
             <input placeholder='Escreva a Tarefa' className={styles.linhaInputs} type="text" onChange={(e)=>{setTarefa(e.target.value)}} name='titulo' />
             <select className={styles.linhaInputs} name="prioridade" onChange={setaPrioridade}>
